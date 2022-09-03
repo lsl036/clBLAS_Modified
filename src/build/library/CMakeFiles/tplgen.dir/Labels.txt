@@ -1,0 +1,13 @@
+# Target labels
+ tplgen
+# Source files and their labels
+/home/lsl/clBLAS-2.12/src/build/library/CMakeFiles/tplgen
+/home/lsl/clBLAS-2.12/src/build/library/CMakeFiles/tplgen.rule
+/home/lsl/clBLAS-2.12/src/build/library/CMakeFiles/tplgen-complete.rule
+/home/lsl/clBLAS-2.12/src/build/library/tplgen-prefix/src/tplgen-stamp/tplgen-install.rule
+/home/lsl/clBLAS-2.12/src/build/library/tplgen-prefix/src/tplgen-stamp/tplgen-mkdir.rule
+/home/lsl/clBLAS-2.12/src/build/library/tplgen-prefix/src/tplgen-stamp/tplgen-download.rule
+/home/lsl/clBLAS-2.12/src/build/library/tplgen-prefix/src/tplgen-stamp/tplgen-update.rule
+/home/lsl/clBLAS-2.12/src/build/library/tplgen-prefix/src/tplgen-stamp/tplgen-patch.rule
+/home/lsl/clBLAS-2.12/src/build/library/tplgen-prefix/src/tplgen-stamp/tplgen-configure.rule
+/home/lsl/clBLAS-2.12/src/build/library/tplgen-prefix/src/tplgen-stamp/tplgen-build.rule

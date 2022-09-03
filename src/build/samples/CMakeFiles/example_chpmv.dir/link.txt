@@ -1,0 +1,1 @@
+/usr/bin/cc -m64  -std=c99 -Wstrict-prototypes -g  -rdynamic CMakeFiles/example_chpmv.dir/example_chpmv.c.o  -o example_chpmv  /usr/lib/x86_64-linux-gnu/mwv207/libOpenCL.so ../library/libclBLAS.so.2.12.0 /usr/lib/x86_64-linux-gnu/mwv207/libOpenCL.so -lm -lpthread 

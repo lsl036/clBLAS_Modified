@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/CMakeFiles/gtest-external"
+		},
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/CMakeFiles/gtest-external.rule"
+		},
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/CMakeFiles/gtest-external-complete.rule"
+		},
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/gtest-external-prefix/src/gtest-external-stamp/gtest-external-install.rule"
+		},
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/gtest-external-prefix/src/gtest-external-stamp/gtest-external-mkdir.rule"
+		},
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/gtest-external-prefix/src/gtest-external-stamp/gtest-external-download.rule"
+		},
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/gtest-external-prefix/src/gtest-external-stamp/gtest-external-update.rule"
+		},
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/gtest-external-prefix/src/gtest-external-stamp/gtest-external-patch.rule"
+		},
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/gtest-external-prefix/src/gtest-external-stamp/gtest-external-configure.rule"
+		},
+		{
+			"file" : "/home/lsl/clBLAS-2.12/src/build/tests/gtest-external-prefix/src/gtest-external-stamp/gtest-external-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"gtest-external"
+		],
+		"name" : "gtest-external"
+	}
+}

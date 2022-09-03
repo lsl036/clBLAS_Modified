@@ -1,0 +1,9 @@
+Thu Sep  1 15:47:01 2022# =========================MEASURE PERFORMANCE START===========================
+Thu Sep  1 15:47:01 2022# Process id of Measure Performance:120949
+Thu Sep  1 15:47:01 2022# Executing measure performance for label: None
+Thu Sep  1 15:47:01 2022# ERROR: at least one of [--square] or [--problemsize] or [-m, -n, and -k] must be specified
+Thu Sep  1 15:47:28 2022# =========================MEASURE PERFORMANCE START===========================
+Thu Sep  1 15:47:28 2022# Process id of Measure Performance:121289
+Thu Sep  1 15:47:28 2022# Executing measure performance for label: None
+Thu Sep  1 15:47:28 2022# Total combinations = 1
+Thu Sep  1 15:47:28 2022# preparing command: 1

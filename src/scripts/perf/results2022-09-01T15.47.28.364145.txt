@@ -1,0 +1,1 @@
+m,n,k,lda,ldb,ldc,offa,offb,offc,alpha,beta,order,transa,transb,side,uplo,diag,function,device,library,numQueues,label,GFLOPS
