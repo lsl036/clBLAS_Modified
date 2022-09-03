@@ -1,3 +1,0 @@
-repository='external project URL'
-module='/home/lsl/clBLAS-2.12/src/library/tools/tplgen'
-tag=''
