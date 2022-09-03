@@ -28,4 +28,4 @@
 *.pyc
 
 # buildfile
-build/*
+src/build/*
