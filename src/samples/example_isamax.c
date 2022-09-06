@@ -19,6 +19,9 @@
 #include <string.h>
 #include <math.h>
 
+#include <time.h>
+#include <sys/time.h>
+#define ARRAY_SIZE 500
 /* Include CLBLAS header. It automatically includes needed OpenCL header,
  * so we can drop out explicit inclusion of cl.h header.
  */
@@ -27,17 +30,17 @@
 /* This example uses predefined matrices and their characteristics for
  * simplicity purpose.
  */
-static const size_t N = 7;
-static cl_float X[] = {
-    1,
-    2,
-    -11,
-    17,
-    5,
-    6,
-    800,
-    10
-};
+// static const size_t N = 7;
+// static cl_float X[] = {
+//     1,
+//     2,
+//     -11,
+//     17,
+//     5,
+//     6,
+//     800,
+//     10
+// };
 // static cl_float X[] = {
 //     0,
 //     0,
@@ -48,8 +51,19 @@ static cl_float X[] = {
 //     0,
 //     0
 // };
+static cl_float X[ARRAY_SIZE];
+
 static const int incx = 1;
 static cl_uint indexMax;
+
+void InitArrayRandom(cl_float *array, int size)
+{
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < size; i++)
+    {
+        array[i] = rand()%100 + 1;
+    }
+}
 
 int
 main(void)
@@ -63,8 +77,10 @@ main(void)
     cl_mem bufX, scratchBuf, iMax;
     cl_event event = NULL;
     int ret = 0;
-	int lenX = 1 + (N-1)*abs(incx);
-    int lenScratchBuf = N;
+	int lenX = 1 + (ARRAY_SIZE-1)*abs(incx);
+    int lenScratchBuf = ARRAY_SIZE;
+
+    InitArrayRandom(X, ARRAY_SIZE);
 
     /* Setup OpenCL environment. */
     err = clGetPlatformIDs(1, &platform, NULL);
@@ -113,7 +129,7 @@ main(void)
     err = clEnqueueWriteBuffer(queue, bufX, CL_TRUE, 0, (lenX*sizeof(cl_float)) , X, 0, NULL, NULL);
 
     /* Call clblas function. */
-    err = clblasiSamax( N, iMax, 0, bufX, 0, incx, scratchBuf,
+    err = clblasiSamax( ARRAY_SIZE, iMax, 0, bufX, 0, incx, scratchBuf,
                                     1, &queue, 0, NULL, &event);
     if (err != CL_SUCCESS) {
         printf("clblasiSamax() failed with %d\n", err);

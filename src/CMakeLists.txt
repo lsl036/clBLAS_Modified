@@ -18,13 +18,14 @@ cmake_minimum_required(VERSION 2.8)
 
 #User toggle-able options that can be changed on the command line with -D
 option( BUILD_RUNTIME "Build the BLAS runtime library" ON )
-option( BUILD_TEST "Build the library testing suite (dependency on google test, Boost, and ACML/NETLIB BLAS)" ON )
+option( BUILD_TEST "Build the library testing suite (dependency on google test, Boost, and ACML/NETLIB BLAS)" OFF )
 option( BUILD_PERFORMANCE "Copy the performance scripts that can measure and graph performance" OFF )
 option( BUILD_SAMPLE "Build the sample programs" ON )
 option( BUILD_CLIENT "Build a command line clBLAS client program with a variety of configurable parameters (dependency on Boost)" OFF )
 option( BUILD_KTEST "A command line tool for testing single clBLAS kernel" ON )
 option( BUILD_SHARED_LIBS "Build shared libraries" ON )
 
+add_definitions(-DDEBUG_CONTEXT)
 #enable or disable offline compilation for different devices. Currently only Hawaii, Bonaire, Tahiti have the option.
 #option( OPENCL_OFFLINE_BUILD_HAWAII_KERNEL "Offline compile the OpenCL kernels for Hawaii device" OFF)
 #option( OPENCL_OFFLINE_BUILD_BONAIRE_KERNEL "Offline compile the OpenCL kernels for Bonaire device" OFF)

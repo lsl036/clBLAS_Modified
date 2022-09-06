@@ -463,7 +463,7 @@ makeSolutionSeq(
 	#endif
 
     /* Find a kernel for each step */
-
+    printf("find a kernel \n");
     for (i = listNodeFirst(seq); (i != seq) && (err == CL_SUCCESS);
          i = i->next) {
 
@@ -529,6 +529,7 @@ makeSolutionSeq(
          * on the fly if this kernel is not presented neither in the cache
          * no in the storage
          */
+        printf("FK clBLAS \n");
         for (ktype = CLBLAS_COMPUTING_KERNEL;
              ktype < MAX_CLBLAS_KERNELS_PER_STEP; ktype++) {
 			 SubproblemDim prepDims[2];
@@ -559,11 +560,13 @@ makeSolutionSeq(
                 pattern->sops->setBuildOptions(bopts, (void*)(step));
             }
             memcpy(extra.buildOptions, bopts, BUILD_OPTS_MAXLEN);
-
+            printf("ktype = %d\n", ktype);
             if (areKernelsCacheable()) {
+                printf("Kernel finding\n");
                 kernel = findKernel(clblasKernelCache, sid, &key, &extra);
             }
             if (kernel == NULL) {
+                printf("NULL kernel\n");
                 if (!loadData && !avoidLoadFromStorage(step)) {
                     size_t MNK = (step->args.M + step->args.N + step->args.K) / 3;
                     loadData = !getKernelInfo(&step->device, pattern->name,
@@ -571,6 +574,7 @@ makeSolutionSeq(
                         &sizeBuffer[0]);
                 }
                 if (buffer[ktype] != NULL){
+                    printf("load kernel\n");
                     kernel = loadKernel((const unsigned char**)&buffer[ktype],
                                         sizeBuffer[ktype], &key, &extra, &err);
                 }
@@ -583,7 +587,7 @@ makeSolutionSeq(
 					#ifdef DEBUG_2
 					printf("Build options used : %s\n", bopts);
 					#endif
-
+                    printf("make kernel\n");
                     kernel = makeKernelCached(key.device, key.context,
                                               sid, &key,
                                         pattern->sops->genKernel,
@@ -604,6 +608,7 @@ makeSolutionSeq(
                     }
                 }
             } else {
+                printf(" kernel found in cache\n");
 				#ifdef DEBUG_CONTEXT
 				printf("KERNEL FOUND IN CACHE\n");
 				#endif

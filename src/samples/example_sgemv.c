@@ -93,7 +93,7 @@ main(void)
     cl_mem bufA, bufX, bufY;
     cl_event event = NULL;
     int ret = 0;
-
+    setenv("CUDA_CACHE_DISABLE", "1", 1);
     /* Setup OpenCL environment. */
     err = clGetPlatformIDs(1, &platform, NULL);
     if (err != CL_SUCCESS) {

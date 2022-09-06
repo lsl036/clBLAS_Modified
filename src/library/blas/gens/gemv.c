@@ -37,16 +37,17 @@ typedef struct {
 } MAY_ALIAS extraData_t;
 
 static const char *gemvDecl =
-    "__attribute__((reqd_work_group_size(%lu, %lu, 1)))\n"
-    "void __kernel\n"
-    "%cgemv(\n"
-    "    uint %c,\n"
-    "    uint %c,\n"
-    "    const %s alpha,\n"
+    "__attribute__((reqd_work_group_size(%lu, %lu, 1)))\n"// wgSize[0], wgSize[1]
+    // "void __kernel\n"
+    "__kernel void\n"
+    "%cgemv(\n"                             // fpref
+    "    uint %c,\n"                        // sizeNames
+    "    uint %c,\n"                        // sizeNames
+    "    const %s alpha,\n"                 // typename
     "    const __global %s *restrict A,\n"
     "    const __global %s *restrict X,\n"
-    "%s"
-    "    __global %s *Y,\n"
+    "%s"                                    // betaDecl
+    "    __global %s *Y,\n"                 // typename
     "    uint lda"
     "%s"    // offset A, X and Y
     "%s"
