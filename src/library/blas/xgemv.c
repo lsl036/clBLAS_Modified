@@ -54,7 +54,7 @@ doGemv(
     }
 
     /* Validate arguments */
-
+    // printf ("Before doGemv check\n");
     if ((retCode = checkMemObjects( A, x, y, true, A_MAT_ERRSET, X_VEC_ERRSET, Y_VEC_ERRSET ))) {
         return retCode;
     }
@@ -89,7 +89,7 @@ doGemv(
     kargs->C = y;
     kargs->offCY = offy;
     kargs->ldc.Vector = incy;
-
+    // printf ("Before doGemv make SolutionSeq\n");
     listInitHead(&seq);
     err = makeSolutionSeq(CLBLAS_GEMV, kargs, numCommandQueues, commandQueues,
         numEventsInWaitList, eventWaitList, events, &seq);

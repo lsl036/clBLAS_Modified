@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: Shengle Lin
+ * @Date: 2022-09-06 10:28:08
+ * @LastEditors: Shengle Lin
+ * @LastEditTime: 2022-09-06 10:32:27
+ */
 /* ************************************************************************
  * Copyright 2014 Advanced Micro Devices, Inc.
  *
@@ -24,7 +31,7 @@
 
 #include <stdio.h>
 
-#define CAPS_DEBUG 0
+#define CAPS_DEBUG 1
 
 extern "C" Kernel* makeKernelCached(cl_device_id device,
                                     cl_context context,

@@ -432,7 +432,8 @@ declareKernel(
     }
 
     sprintf(tmp, "__attribute__((reqd_work_group_size(%u, 1, 1)))\n"
-                 "void __kernel\n"
+                //  "void __kernel\n"
+                 "__kernel void\n"
                  "%csyr%sk%s(\n"
                  "    uint N,\n"
                  "    const uint K,\n"

@@ -463,7 +463,7 @@ makeSolutionSeq(
 	#endif
 
     /* Find a kernel for each step */
-    printf("find a kernel \n");
+    // printf("find a kernel \n");
     for (i = listNodeFirst(seq); (i != seq) && (err == CL_SUCCESS);
          i = i->next) {
 
@@ -499,7 +499,7 @@ makeSolutionSeq(
         pattern = &(clblasSolvers[step->funcID].memPatterns[step->patternID]);
         firstDimIdx = 2 - pattern->nrLevels;
         sid = makeSolverID(step->funcID, step->patternID);
-
+        // printf ("sid = %d\n");
         err = getQueueDevice(step->cmdQueue, &key.device);
         err = getQueueContext(step->cmdQueue, &key.context);
 
@@ -529,7 +529,7 @@ makeSolutionSeq(
          * on the fly if this kernel is not presented neither in the cache
          * no in the storage
          */
-        printf("FK clBLAS \n");
+        // printf("FK clBLAS \n");
         for (ktype = CLBLAS_COMPUTING_KERNEL;
              ktype < MAX_CLBLAS_KERNELS_PER_STEP; ktype++) {
 			 SubproblemDim prepDims[2];
@@ -560,9 +560,9 @@ makeSolutionSeq(
                 pattern->sops->setBuildOptions(bopts, (void*)(step));
             }
             memcpy(extra.buildOptions, bopts, BUILD_OPTS_MAXLEN);
-            printf("ktype = %d\n", ktype);
+            // printf("ktype = %d\n", ktype);
             if (areKernelsCacheable()) {
-                printf("Kernel finding\n");
+                // printf("Kernel finding\n");
                 kernel = findKernel(clblasKernelCache, sid, &key, &extra);
             }
             if (kernel == NULL) {

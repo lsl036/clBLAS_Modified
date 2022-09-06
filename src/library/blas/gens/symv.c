@@ -34,7 +34,8 @@
 
 static const char *symvDecl =
     "__attribute__((reqd_work_group_size(%lu, %lu, 1)))\n"
-    "void __kernel\n"
+    // "void __kernel\n"
+    "__kernel void\n"
     "%csymv(\n"
     "    uint N,\n"
     "    const %s alpha,\n"
