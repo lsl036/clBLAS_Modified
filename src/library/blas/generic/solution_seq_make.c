@@ -566,7 +566,7 @@ makeSolutionSeq(
                 kernel = findKernel(clblasKernelCache, sid, &key, &extra);
             }
             if (kernel == NULL) {
-                printf("NULL kernel\n");
+                // printf("NULL kernel\n");
                 if (!loadData && !avoidLoadFromStorage(step)) {
                     size_t MNK = (step->args.M + step->args.N + step->args.K) / 3;
                     loadData = !getKernelInfo(&step->device, pattern->name,
@@ -574,7 +574,7 @@ makeSolutionSeq(
                         &sizeBuffer[0]);
                 }
                 if (buffer[ktype] != NULL){
-                    printf("load kernel\n");
+                    // printf("load kernel\n");
                     kernel = loadKernel((const unsigned char**)&buffer[ktype],
                                         sizeBuffer[ktype], &key, &extra, &err);
                 }
@@ -587,7 +587,7 @@ makeSolutionSeq(
 					#ifdef DEBUG_2
 					printf("Build options used : %s\n", bopts);
 					#endif
-                    printf("make kernel\n");
+                    // printf("make kernel\n");
                     kernel = makeKernelCached(key.device, key.context,
                                               sid, &key,
                                         pattern->sops->genKernel,

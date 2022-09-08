@@ -27,7 +27,9 @@
 /* This example uses predefined matrices and their characteristics for
  * simplicity purpose.
  */
-static const clblasOrder order = clblasColumnMajor;
+// clblasColumnMajor clblasRowMajor
+// static const clblasOrder order = clblasColumnMajor;
+static const clblasOrder order = clblasRowMajor;
 static const clblasSide side = clblasLeft;
 static const clblasTranspose transA = clblasNoTrans;
 static const clblasUplo uploA = clblasUpper;
@@ -36,12 +38,22 @@ static const clblasDiag diagA = clblasNonUnit;
 static const cl_float alpha = 10;
 static const size_t M = 64;
 static const size_t N = 64;
-static const size_t lda = M;        /* i.e. lda = M */
-static const size_t ldb = N;        /* i.e. ldb = N */
 
-static cl_float A[lda * M];
-static cl_float B[ldb * N];
-static cl_float result[ldb * N];         /* ldb*N */
+//Specifies the leading dimension of A as declared in the calling (sub)program. When side = CblasLeft, then lda must be at least max(1, m), when side = CblasRight, then lda must be at least max(1, n).
+static const size_t lda = M;
+
+// Specifies the leading dimension of B as declared in the calling (sub)program. When Layout = CblasColMajor, ldb must be at least max(1, m); otherwise, ldb must be at least max(1, n).
+static const size_t ldb = N;
+
+// // Array, size lda* k , where k is m when side = CblasLeft and is n when side = CblasRight. Before entry with uplo = CblasUpper, the leading k by k upper triangular part of the array a must contain the upper triangular matrix and the strictly lower triangular part of a is not referenced.
+// Before entry with uplo = CblasLower lower triangular part of the array a must contain the lower triangular matrix and the strictly upper triangular part of a is not referenced.
+// When diag = CblasUnit, the diagonal elements of a are not referenced either, but are assumed to be unity.
+static cl_float A[lda * M]; // 4 x 4
+
+// For Layout = ClblasColMajor: array, size ldb*n. Before entry, the leading m-by-n part of the array b must contain the matrix B.
+// For Layout = ClblasRowMajor: array, size ldb*m. Before entry, the leading n-by-m part of the array b must contain the matrix B.
+static cl_float B[ldb * M];         // 5 * 4
+static cl_float result[ldb * M];    // 5 * 4     
 
 static const size_t off  = 0;
 static const size_t offA = 0;   /* M + off */
@@ -76,12 +88,35 @@ printResult(const char* str)
     }
 }
 
+static void
+printMatrix(const cl_float *mat, clblasOrder order, size_t M , size_t N )
+{
+    printf("\n");
+    if (order == clblasColumnMajor)
+    {
+        for (size_t i = 0; i < M; i++) {
+            for (size_t j = 0; j < N; j++) {
+                printf("%.5e ", mat[j * M + i]);
+            }
+            printf("\n");
+        }
+    }
+    else if (order == clblasRowMajor)
+    {
+        for (size_t i = 0; i < M; i++) {
+            for (size_t j = 0; j < N; j++) {
+                printf("%.5e ", mat[i * N + j]);
+            }
+            printf("\n");
+        }
+    }
+}
+
 int
 main(void)
 {
     cl_int err;
-    // Increase platforms array for system needs; 2 covers most situations
-    cl_platform_id platforms[] = { 0,0 };
+    cl_platform_id platform = 0;
     cl_device_id device = 0;
     cl_context_properties props[3] = { CL_CONTEXT_PLATFORM, 0, 0 };
     cl_context ctx = 0;
@@ -90,35 +125,62 @@ main(void)
     cl_event event = NULL;
     int ret = 0;
 
-    makeScaledIdentity( A, M, N, 1.0f );
-    makeScaledIdentity( B, M, N, 1.0f);
-    makeScaledIdentity( result, M, N, 0.0f);
+    // makeScaledIdentity( A, lda, M, 1.0f );
+    // makeScaledIdentity( B, ldb, N, 1.0f);
+    // makeScaledIdentity( result, ldb, N, 0.0f);
+    for (size_t i = 0; i < lda; i++)
+    {
+        for (size_t j = 0; j < M; j++)
+        {
+            if (j >= i)
+                // A[j * lda + i] = (i+1)*10+(j+1);
+                A[i * M + j] = (i+1)*10+(j+1);
+            else
+                // A[j * lda + i] = 0.0f;
+                A[i * M + j] = 0.0f;
+        }
+    }
+    for (size_t i = 0; i < M; i++)
+    {
+        for (size_t j = 0; j < ldb; j++)
+        {
+            B[ i * ldb + j] = (i+1)*10 + (j+1);
+            result[ i * ldb + j] = 0.0f;
+        }
+    }
 
+    printf ("A = \n");
+    printMatrix(A, order, M, M);
+    // for (size_t i = 0; i < M*M; i++) {
+    //     printf("%.5e ", A[i]);
+    // }
+    printf ("B = \n");
+    // for (size_t i = 0; i < M*N; i++) {
+    //     printf("%.5e ", B[i]);
+    // }
+    printMatrix(B, order, M, N);
     /* Setup OpenCL environment. */
-    err = clGetPlatformIDs( sizeof( platforms )/ sizeof( cl_platform_id ), &platforms[0], NULL);
+    err = clGetPlatformIDs( 1 , &platform, NULL);
     if (err != CL_SUCCESS) {
         printf( "clGetPlatformIDs() failed with %d\n", err );
         return 1;
     }
 
-    // Change this statement to pick the desired platform under test
-    cl_platform_id test_platform = platforms[1];
-
-    //!!!  Change device type to validate; works on GPU, faults on CPU
-    err = clGetDeviceIDs(test_platform, CL_DEVICE_TYPE_CPU, 1, &device, NULL);
+    err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL);
     if (err != CL_SUCCESS) {
         printf( "clGetDeviceIDs() failed with %d\n", err );
         return 1;
     }
 
-    props[1] = (cl_context_properties)test_platform;
+    props[1] = (cl_context_properties)platform;
     ctx = clCreateContext(props, 1, &device, NULL, NULL, &err);
     if (err != CL_SUCCESS) {
         printf( "clCreateContext() failed with %d\n", err );
         return 1;
     }
 
-    queue = clCreateCommandQueue(ctx, device, 0, &err);
+    // queue = clCreateCommandQueue(ctx, device, 0, &err);
+    queue = clCreateCommandQueueWithProperties(ctx, device, 0, &err);
     if (err != CL_SUCCESS) {
         printf( "clCreateCommandQueue() failed with %d\n", err );
         clReleaseContext(ctx);
@@ -135,15 +197,15 @@ main(void)
     }
 
     /* Prepare OpenCL memory objects and place matrices inside them. */
-    bufA = clCreateBuffer(ctx, CL_MEM_READ_ONLY, lda * M * sizeof(*A),
+    bufA = clCreateBuffer(ctx, CL_MEM_READ_ONLY, M * M * sizeof(*A),
                           NULL, &err);
-    bufB = clCreateBuffer(ctx, CL_MEM_READ_WRITE, ldb * N * sizeof(*B),
+    bufB = clCreateBuffer(ctx, CL_MEM_READ_WRITE, M * N * sizeof(*B),
                           NULL, &err);
 
     err = clEnqueueWriteBuffer(queue, bufA, CL_TRUE, 0,
-        lda * M * sizeof(*A), A, 0, NULL, NULL);
+        M * M * sizeof(*A), A, 0, NULL, NULL);
     err = clEnqueueWriteBuffer(queue, bufB, CL_TRUE, 0,
-        ldb * N * sizeof(*B), B, 0, NULL, NULL);
+        M * N * sizeof(*B), B, 0, NULL, NULL);
 
     /* Call clblas function. Perform TRSM for the lower right sub-matrices */
     // A is identity matrix
@@ -162,7 +224,7 @@ main(void)
 
         /* Fetch results of calculations from opencl memory. */
         err = clEnqueueReadBuffer(queue, bufB, CL_TRUE, 0,
-                                  ldb * N * sizeof(*result),
+                                  M * N * sizeof(*result),
                                   result, 0, NULL, NULL);
 
         // At this point, 'result' should contain a scaled identity matrix

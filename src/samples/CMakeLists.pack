@@ -87,6 +87,7 @@ set(SSYMV_SAMPLE_SRC example_ssymv.c)
 set(SGEMM_SAMPLE_SRC example_sgemm.c)
 set(STRMM_SAMPLE_SRC example_strmm.c)
 set(STRSM_SAMPLE_SRC example_strsm.c)
+set(CTRSM_SAMPLE_SRC example_ctrsm.c)
 set(SSYRK_SAMPLE_SRC example_ssyrk.c)
 set(SSYR2K_SAMPLE_SRC example_ssyr2k.c)
 set(STRMV_SAMPLE_SRC example_strmv.c)
@@ -157,6 +158,10 @@ target_link_libraries(example_strmm ${OPENCL_LIBRARIES} clblas)
 
 add_executable(example_strsm ${STRSM_SAMPLE_SRC})
 target_link_libraries(example_strsm ${OPENCL_LIBRARIES} clblas)
+
+add_executable(example_ctrsm ${CTRSM_SAMPLE_SRC})
+target_link_libraries(example_ctrsm ${OPENCL_LIBRARIES} clBLAS)
+set_property( TARGET example_ctrsm PROPERTY FOLDER "Samples")
 
 add_executable(example_ssyrk ${SSYRK_SAMPLE_SRC})
 target_link_libraries(example_ssyrk ${OPENCL_LIBRARIES} clblas)

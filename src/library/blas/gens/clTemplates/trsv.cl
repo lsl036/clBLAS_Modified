@@ -240,6 +240,7 @@ const char * trsv_CUT_SolveTriangle_kernel = "
 #else
     #define A( row, col) A[ (row) + (col) * lda]
 #endif
+
 __kernel void %PREFIXtrsv_CUT_SolveTriangle_kernel(     __global const %TYPE* _A,
                                                 __global %TYPE* _xnew,
                                                 uint N,

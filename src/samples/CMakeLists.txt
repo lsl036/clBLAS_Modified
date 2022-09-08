@@ -277,7 +277,7 @@ else( )
     set( CLBLAS_EXAMPLE_INSTALL_DESTINATION share/clBLAS/samples)
 endif()
 install( TARGETS example_sgemm example_sgemv example_ssymv example_ssyrk
-         example_ssyr2k example_strmm example_strsm
+         example_ssyr2k example_strmm example_strsm example_ctrsm
          example_strmv example_strsv example_sger example_cher example_ssyr
          example_ssyr2 example_cherk example_ssymm example_chemm
          example_stpmv example_chpmv example_stpsv example_sspmv example_sspr example_chpr

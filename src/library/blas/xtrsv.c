@@ -199,8 +199,10 @@ orchestrateTransposeTRSV(CLBlasKargs *kargs, ListHead *trtriSeq, ListHead *gemvS
 	//
 	// Allocate Event Arrays to order the orchestration
 	//
-	triangleEventArray = malloc(nLoops*sizeof(cl_event));
-	rectangleEventArray = malloc(nLoops*sizeof(cl_event));
+	// triangleEventArray = malloc(nLoops*sizeof(cl_event));
+	// rectangleEventArray = malloc(nLoops*sizeof(cl_event));
+	triangleEventArray = calloc(nLoops, sizeof(cl_event));
+	rectangleEventArray = calloc(nLoops, sizeof(cl_event));
 	if ((triangleEventArray == NULL) || (rectangleEventArray == NULL))
 	{
 		if (triangleEventArray)
@@ -288,6 +290,15 @@ orchestrateTransposeTRSV(CLBlasKargs *kargs, ListHead *trtriSeq, ListHead *gemvS
 			break;
 		}
 	}
+
+	// Clean up internal events
+    for (i = 0; i < nLoops; i++)
+    {
+        clReleaseEvent(triangleEventArray[i]);
+        triangleEventArray[i] = NULL;
+        clReleaseEvent(rectangleEventArray[i]);
+        rectangleEventArray[i] = NULL;
+    }
 
 	free(triangleEventArray);
 	free(rectangleEventArray);

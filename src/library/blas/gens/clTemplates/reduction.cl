@@ -30,7 +30,7 @@ __kernel void %PREFIXred_sum_kernel( __global %TYPE *_X, __global %TYPE *_res,
 {
  	__global %TYPE *X = _X + offx;
     __global %TYPE *res = _res + offRes;
-    %TYPE redVal = (%TYPE) 0.0;
+    %TYPE redVal = (%TYPE) 0;
 
     int gOffset;
     for( gOffset=(get_global_id(0) * %V); (gOffset + %V - 1)<N; gOffset+=( get_global_size(0) * %V ) )
@@ -167,8 +167,8 @@ static const char *red_with_index_kernel = "
 
     #define MIN 0x1.0p-1022         // Min in case of d/z (values from khronos site)
 #else
-    // #define MIN 0x1.0p-126f         // Min in case od s/c
-    #define MIN -1
+    #define MIN 0x1.0p-126f         // Min in case od s/c
+    // #define MIN -1
 #endif
 
 
@@ -235,7 +235,7 @@ __kernel void %PREFIXred_hypot_kernel( __global %TYPE *_X, __global %TYPE *_res,
 {
  	__global %TYPE *X = _X + offx;
     __global %TYPE *res = _res + offRes;
-    %TYPE redVal = (%TYPE) 0.0;
+    %TYPE redVal = (%TYPE) 0;
 
     int gOffset;
     for( gOffset=(get_global_id(0) * %V); (gOffset + %V - 1)<N; gOffset+=( get_global_size(0) * %V ) )
@@ -273,7 +273,7 @@ static const char *red_ssq_kernel = "
     #define MAX 0x1.fffffep127f             // Max in case of s/c
 #endif
 
-#define ZERO (%TYPE)0.0
+#define ZERO (%TYPE)(0)
 
 // Since scale & ssq are always of primitive type,
 // This kernel will always be called only for float/double
@@ -315,7 +315,7 @@ __kernel void %PREFIXred_ssq_kernel( __global %TYPE *_X, __global %TYPE *_res,
     // Now we calculate ssq by loading the array again and dividing the
     // elements by scale and squaring it.
 
-    %TYPE ssq = (%TYPE) 0.0;
+    %TYPE ssq = (%TYPE) 0;
     %TYPE scaleOfWG = _scaleOfWG;
 
     // If scale was zero, that means the whole array encountered before was filled with zeroes

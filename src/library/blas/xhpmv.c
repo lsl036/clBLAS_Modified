@@ -44,7 +44,7 @@ doHpmv(
 {
     cl_int err;
     ListHead seq1, seq2;
-	cl_event first_event;
+	cl_event first_event = NULL;
     clblasStatus retCode = clblasSuccess;
 
     if (!clblasInitialized) {
@@ -111,6 +111,7 @@ doHpmv(
 				err = executeSolutionSeq(&seq2);
 			}
 			freeSolutionSeq(&seq2);
+            clReleaseEvent(first_event);
 		}
     }
 

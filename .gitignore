@@ -29,3 +29,5 @@
 
 # buildfile
 src/build/*
+build/*
+.vscode/*

@@ -32,7 +32,7 @@
 #include "TrtriKernelSourceIncludes.h"
 #include <iostream>
 
-
+#define AUTOGEMM_PRINT_DEBUG  1 
 // Transform a trsm in clblasRowMajor into a trsm in clblasColumnMajor:
 //
 // The idea is basically that
@@ -1838,9 +1838,9 @@ clblasCtrsm(
 
    clblasFunctorSelector  * fselector = clblasFunctorSelector::find(queue);
 
-   clblasCtrsmFunctor * functor = fselector->select_ctrsm_specific(args);
+   clblasCtrsmFunctor * functor = fselector->select_ctrsm_specific(args);//clblasCtrsmFunctorFallback
 
-   clblasStatus res = functor->execute(args);
+   clblasStatus res = functor->execute(args); //clblasCtrsmFunctorFallback::execute functor_xtrsm.cc
 
    functor->release();
 

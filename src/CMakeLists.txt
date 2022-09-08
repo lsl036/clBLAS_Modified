@@ -18,7 +18,7 @@ cmake_minimum_required(VERSION 2.8)
 
 #User toggle-able options that can be changed on the command line with -D
 option( BUILD_RUNTIME "Build the BLAS runtime library" ON )
-option( BUILD_TEST "Build the library testing suite (dependency on google test, Boost, and ACML/NETLIB BLAS)" OFF )
+option( BUILD_TEST "Build the library testing suite (dependency on google test, Boost, and ACML/NETLIB BLAS)" ON )
 option( BUILD_PERFORMANCE "Copy the performance scripts that can measure and graph performance" OFF )
 option( BUILD_SAMPLE "Build the sample programs" ON )
 option( BUILD_CLIENT "Build a command line clBLAS client program with a variety of configurable parameters (dependency on Boost)" OFF )
@@ -71,13 +71,13 @@ set( OPENCL_OFFLINE_BUILD_TAHITI_KERNEL OFF)
 #  MESSAGE(STATUS "Please ensure the presence of Tahiti device in the system. With certain driver/compiler flags, this might result in compile-time error.")
 #endif( )
 
-
+# FIX: 修改了OPENCL_VERSION 1.2 --> 2.0
 # Ask the user to verify compiler version. If OpenCL 2.0 is supported. Certain public flags can be user
-set( OPENCL_VERSION "1.2" CACHE STRING "The version of OpenCL supported by your driver/device" )
+set( OPENCL_VERSION "2.0" CACHE STRING "The version of OpenCL supported by your driver/device" )
 set_property( CACHE OPENCL_VERSION PROPERTY STRINGS 2.0 1.2 1.1 )
 message( STATUS "You have confirmed OpenCL ${OPENCL_VERSION} is supported in your system" )
 
-# By default test-correctness is linked and tested against ACML library.
+# By default test-correctness is linked and tested against ACML library. (AMD Core Math Library)
 # However, test-correctness can instead use NETLIB as a reference library
 # On Mac OSX systems, this must be set to OFF for the build to succeed (due to nesting of FindBLAS code)
 if ( APPLE )
@@ -96,6 +96,7 @@ if( CMAKE_GENERATOR MATCHES "NMake" )
   endif( )
 endif( )
 
+# 指定项目名称和使用语言， 如果使用netlib BLAS则需要增加Fortran语言
 # If we are on linux, and we wish to link with the netlib BLAS implementation when BUILD_TEST is ON, we need to have a valid fortran compiler
 if(BUILD_TEST AND NOT CORR_TEST_WITH_ACML AND NOT WIN32 AND NOT APPLE)
   project(clBLAS Fortran C CXX )
@@ -103,7 +104,7 @@ else( )
   project(clBLAS C CXX)
 endif( )
 
-# Define a version for the code
+# Define a version for the code 设定clBLAS版本
 if( NOT DEFINED clBLAS_VERSION_MAJOR )
     set( clBLAS_VERSION_MAJOR 2 )
 endif( )
@@ -141,6 +142,7 @@ endif()
 set( SUFFIX_LIB_DEFAULT "" )
 set( SUFFIX_BIN_DEFAULT "" )
 
+# 确定平台 是 32/64 位， 利用CMAKE_SIZEOF_VOID_P 大小来确定
 if(TARGET_PLATFORM EQUAL 32 OR TARGET_PLATFORM EQUAL 64)
     set(TARGET_PLATFORM ${TARGET_PLATFORM} CACHE STRING "Target platform type (32-bit or 64-bit)" FORCE)
 else()
@@ -151,6 +153,7 @@ else()
     endif()
 endif()
 
+# 架构设定 x86_64
 message(STATUS "Target platform: ${TARGET_PLATFORM}-bit")
 if(TARGET_PLATFORM EQUAL 32)
     set(_arch "x86" INTERNAL)
@@ -163,6 +166,7 @@ else()
     endif( )
 endif()
 
+# 设置 LIB 和 BIN 的路径
 set( SUFFIX_LIB ${SUFFIX_LIB_DEFAULT} CACHE STRING "String to append to 'lib' install path" )
 set( SUFFIX_BIN ${SUFFIX_BIN_DEFAULT} CACHE STRING "String to append to 'bin' install path" )
 

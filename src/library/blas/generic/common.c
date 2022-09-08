@@ -30,6 +30,7 @@
 #define KEEP_CLBLAS_KERNEL_SOURCES
 #endif
 
+// #define DEBUG_2 0
 int clblasInitialized = 0;
 CLBlasSolvers clblasSolvers[BLAS_FUNCTIONS_NUMBER];
 struct KernelCache *clblasKernelCache = NULL;
@@ -537,11 +538,12 @@ setupBuildOpts(
     identifyDevice(&target);
     opts[0] = '\0';
 
-#if !defined NDEBUG
-    // Nvidia runtime does not appear to support the -g flag, at least in their OpenCL v1.1 runtime
-    if( target.ident.vendor != VENDOR_NVIDIA )
-        addBuildOpt( opts, BUILD_OPTS_MAXLEN, "-g" );
-#endif  /* NDEBUG */
+// clBuildProgram is crashing in xTRMM with the '-g' debug flag
+// #if !defined NDEBUG
+//     // Nvidia runtime does not appear to support the -g flag, at least in their OpenCL v1.1 runtime
+//     if( target.ident.vendor != VENDOR_NVIDIA )
+//         addBuildOpt( opts, BUILD_OPTS_MAXLEN, "-g" );
+// #endif  /* NDEBUG */
 
     if (target.ident.vendor == VENDOR_NVIDIA &&
         !strcmp(mempat->name, "2-staged cached global memory based "
@@ -584,7 +586,7 @@ char VISIBILITY_HIDDEN
 
 clblasStatus VISIBILITY_HIDDEN
 checkMatrixSizes(
-    DataType dtype,
+    DataType dtype,     // S:0, D:1, C:2, Z:3
     clblasOrder order,
     clblasTranspose transA,
     size_t M,

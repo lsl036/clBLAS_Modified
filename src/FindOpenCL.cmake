@@ -81,6 +81,8 @@ else( )
    set( CL_HEADER_FILE "CL/cl.h" )
 endif( )
 
+check_symbol_exists( CL_VERSION_3_0 ${CL_HEADER_FILE} HAVE_CL_3_0 )
+check_symbol_exists( CL_VERSION_2_2 ${CL_HEADER_FILE} HAVE_CL_2_2 )
 check_symbol_exists( CL_VERSION_2_0 ${CL_HEADER_FILE} HAVE_CL_2_0 )
 check_symbol_exists( CL_VERSION_1_2 ${CL_HEADER_FILE} HAVE_CL_1_2 )
 check_symbol_exists( CL_VERSION_1_1 ${CL_HEADER_FILE} HAVE_CL_1_1 )
@@ -89,7 +91,11 @@ check_symbol_exists( CL_VERSION_1_1 ${CL_HEADER_FILE} HAVE_CL_1_1 )
 # message( STATUS "HAVE_CL_1_1: ${HAVE_CL_1_1}" )
 
 # set OpenCL_VERSION to the highest detected version
-if( HAVE_CL_2_0 )
+if( HAVE_CL_3_0 )
+  set( OpenCL_VERSION "3.0" )
+elseif( HAVE_CL_2_2 )
+  set( OpenCL_VERSION "2.2" )
+elseif( HAVE_CL_2_0 )
   set( OpenCL_VERSION "2.0" )
 elseif( HAVE_CL_1_2 )
   set( OpenCL_VERSION "1.2" )
@@ -145,10 +151,13 @@ if( OpenCL_VERSION VERSION_LESS OpenCL_FIND_VERSION )
     message( FATAL_ERROR "Requested OpenCL version: ${OpenCL_FIND_VERSION}, Found OpenCL version: ${OpenCL_VERSION}" )
 endif( )
 
-# If we asked for OpenCL 1.2, and we found a version installed greater than that, pass the 'use deprecated' flag
-if( (OpenCL_FIND_VERSION VERSION_LESS "2.0") AND (OpenCL_VERSION VERSION_GREATER OpenCL_FIND_VERSION) )
-    add_definitions( -DCL_USE_DEPRECATED_OPENCL_2_0_APIS )
 
+if ( (OpenCL_FIND_VERSION VERSION_LESS "2.2") AND (OpenCL_VERSION VERSION_GREATER OpenCL_FIND_VERSION) )
+    add_definitions( -DCL_USE_DEPRECATED_OPENCL_2_2_APIS )
+  # If we asked for OpenCL 1.2, and we found a version installed greater than that, pass the 'use deprecated' flag
+    if( (OpenCL_FIND_VERSION VERSION_LESS "2.0") AND (OpenCL_VERSION VERSION_GREATER OpenCL_FIND_VERSION) )
+        add_definitions( -DCL_USE_DEPRECATED_OPENCL_2_0_APIS )
+    endif( )
     # If we asked for OpenCL 1.1, and we found a version installed greater than that, pass the 'use deprecated' flag
     if( (OpenCL_FIND_VERSION VERSION_LESS "1.2") AND (OpenCL_VERSION VERSION_GREATER OpenCL_FIND_VERSION) )
         add_definitions( -DCL_USE_DEPRECATED_OPENCL_1_1_APIS )

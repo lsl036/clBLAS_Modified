@@ -23,8 +23,8 @@ static const char *iamax_kernel = "
     #endif
     #define MIN 0x1.0p-1022         // Min in case of d/z (values from khronos site)
 #else
-    // #define MIN 0x1.0p-126f         // Min in case od s/c
-    #define MIN -1
+    #define MIN 0x1.0p-126f         // Min in case od s/c
+    // #define MIN -1
 #endif
 /******************************************************
  *  Implementations available for REDUCTION_BY_MAX

@@ -29,37 +29,45 @@
  */
 static const clblasOrder order = clblasRowMajor;
 static const clblasSide side = clblasLeft;
-
-static const size_t M = 4;
-static const size_t N = 5;
-
-static const cl_float alpha = 10;
-
 static const clblasTranspose transA = clblasNoTrans;
 static const clblasUplo uploA = clblasUpper;
 static const clblasDiag diagA = clblasNonUnit;
+
+static const cl_float alpha = 10;
+static const size_t M = 4;
+static const size_t N = 5;
+
+//Specifies the leading dimension of A as declared in the calling (sub)program. When side = CblasLeft, then lda must be at least max(1, m), when side = CblasRight, then lda must be at least max(1, n).
+static const size_t lda = 4;        /* i.e. lda = M */
+
+// Specifies the leading dimension of B as declared in the calling (sub)program. When Layout = CblasColMajor, ldb must be at least max(1, m); otherwise, ldb must be at least max(1, n).
+static const size_t ldb = 5;        /* i.e. ldb = N */
+
+// Array, size lda* k , where k is m when side = CblasLeft and is n when side = CblasRight. Before entry with uplo = CblasUpper, the leading k by k upper triangular part of the array a must contain the upper triangular matrix and the strictly lower triangular part of a is not referenced.
+// Before entry with uplo = CblasLower lower triangular part of the array a must contain the lower triangular matrix and the strictly upper triangular part of a is not referenced.
+// When diag = CblasUnit, the diagonal elements of a are not referenced either, but are assumed to be unity.
 static const cl_float A[] = {
     11, 12, 13, 14,
      0, 22, 23, 24,
      0,  0, 33, 34,
      0,  0,  0, 44
 };
-static const size_t lda = 4;        /* i.e. lda = M */
 
+// For Layout = ClblasColMajor: array, size ldb*n. Before entry, the leading m-by-n part of the array b must contain the matrix B.
+// For Layout = ClblasRowMajor: array, size ldb*m. Before entry, the leading n-by-m part of the array b must contain the matrix B.
 static cl_float B[] = {
     11, 12, 13, 14, 15,
     21, 22, 23, 24, 25,
     31, 32, 33, 34, 35,
     41, 42, 43, 44, 45
 };
-static const size_t ldb = 5;        /* i.e. ldb = N */
 
 
 static cl_float result[20];         /* ldb*M */
 
-static const size_t off  = 1;
-static const size_t offA = 4 + 1;   /* M + off */
-static const size_t offB = 5 + 1;   /* N + off */
+static const size_t off  = 0;
+static const size_t offA = 0;   /* M + off */
+static const size_t offB = 0;   /* N + off */
 
 static void
 printResult(const char* str)
