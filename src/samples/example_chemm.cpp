@@ -18,7 +18,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <sys/time.h>
 /* Include CLBLAS header. It automatically includes needed OpenCL header,
  * so we can drop out explicit inclusion of cl.h header.
  */
@@ -81,6 +81,10 @@ printResult(void)
 int
 main(void)
 {
+    struct  timeval start;
+    struct  timeval end;
+    //记录两个时间差
+    unsigned  long diff;
     cl_int err;
     cl_platform_id platform = 0;
     cl_device_id device = 0;
@@ -142,6 +146,7 @@ main(void)
     err = clEnqueueWriteBuffer(queue, bufC, CL_TRUE, 0,
         M * N * sizeof(*C), C, 0, NULL, NULL);
 
+    gettimeofday(&start,NULL);
     /* Call clblas function. */
     err = clblasChemm(order, side, uplo, M, N, alpha, bufA,
                          0, lda, bufB, 0, ldb, beta, bufC, 0, ldc, 1, &queue,
@@ -153,6 +158,10 @@ main(void)
     else {
         /* Wait for calculations to be finished. */
         err = clWaitForEvents(1, &event);
+
+        gettimeofday(&end, NULL);
+        diff = 1000000 * (end.tv_sec-start.tv_sec)+ end.tv_usec-start.tv_usec;
+        printf("clblasChemm Time: %lf ms\n",(double)diff/1000.0);
 
         /* Fetch results of calculations from GPU memory. */
         err = clEnqueueReadBuffer(queue, bufC, CL_TRUE, 0, M * N * sizeof(*C),

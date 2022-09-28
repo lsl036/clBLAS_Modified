@@ -18,7 +18,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <sys/time.h>
 /* Include CLBLAS header. It automatically includes needed OpenCL header,
  * so we can drop out explicit inclusion of cl.h header.
  */
@@ -31,36 +31,45 @@ static const clblasOrder order = clblasRowMajor;
 static const clblasUplo uplo = clblasUpper;
 static const clblasTranspose transA = clblasNoTrans;
 
-static const size_t N = 5;
-static const size_t K = 4;
+#define K  400
+#define N  500
+// static const size_t N = 5;
+// static const size_t K = 4;
 
 static const cl_float alpha = 10;
 
-static const cl_float A[] = {
-    11, 12, 13, 14,
-    21, 22, 23, 24,
-    31, 32, 33, 34,
-    41, 42, 43, 44,
-    51, 52, 53, 54
-};
-static const size_t lda = 4;        /* i.e. lda = K */
+static  cl_float A[N*K] = {};
+// static const cl_float A[] = {
+//     11, 12, 13, 14,
+//     21, 22, 23, 24,
+//     31, 32, 33, 34,
+//     41, 42, 43, 44,
+//     51, 52, 53, 54
+// };
+static const size_t lda = K;        /* i.e. lda = K */
 
 static const cl_float beta = 20;
 
-static cl_float C[] = {
-    11, 12, 13, 14, 15,
-    12, 22, 23, 24, 25,
-    13, 23, 33, 34, 35,
-    14, 24, 34, 44, 45,
-    15, 25, 35, 45, 55
-};
-static const size_t ldc = 5;        /* i.e. ldc = N */
+static cl_float C[N*N] = {};
+// static cl_float C[] = {
+//     11, 12, 13, 14, 15,
+//     12, 22, 23, 24, 25,
+//     13, 23, 33, 34, 35,
+//     14, 24, 34, 44, 45,
+//     15, 25, 35, 45, 55
+// };
+static const size_t ldc = N;        /* i.e. ldc = N */
 
-static cl_float result[5*5];        /*  ldc*N */
+static cl_float result[N*N];
+// static cl_float result[5*5];        /*  ldc*N */
 
-static const size_t off  = 1;
-static const size_t offA = 4 + 1;   /* K + off */
-static const size_t offC = 5 + 1;   /* N + off */
+
+static const size_t off  = 0;
+static const size_t offA = 0;
+static const size_t offC = 0;
+// static const size_t off  = 1;
+// static const size_t offA = 4 + 1;   /* K + off */
+// static const size_t offC = 5 + 1;   /* N + off */
 
 static void
 printResult(const char* str)
@@ -81,6 +90,19 @@ printResult(const char* str)
 int
 main(void)
 {
+    srand((unsigned int)time(NULL));
+    for (size_t i = 0; i < N; i++)
+        for (size_t  j= 0; j < K; j++)
+            A[K*i+j] = rand()%100;
+    
+    srand((unsigned int)time(NULL));
+    for (size_t i = 0; i < N; i++)
+        for (size_t  j= 0; j < N; j++)
+            C[N*i+j] = rand()%100;
+    
+    struct timeval start;
+    struct timeval end;
+    unsigned long diff;
     cl_int err;
     cl_platform_id platform = 0;
     cl_device_id device = 0;
@@ -138,6 +160,7 @@ main(void)
     err = clEnqueueWriteBuffer(queue, bufC, CL_TRUE, 0,
         N * N * sizeof(*C), C, 0, NULL, NULL);
 
+    gettimeofday(&start,NULL);
     /* Call clblas extended function. Perform SYRK for the lower right sub-matrices */
     err = clblasSsyrk(order, uplo, transA, N - off, K - off,
                          alpha, bufA, offA, lda, beta, bufC, offC, ldc,
@@ -150,6 +173,10 @@ main(void)
         /* Wait for calculations to be finished. */
         err = clWaitForEvents(1, &event);
 
+        gettimeofday(&end, NULL);
+        diff = 1000000 * (end.tv_sec-start.tv_sec)+ end.tv_usec-start.tv_usec;
+        printf("clblasSsyrk Time: %lf ms\n",(double)diff/1000.0);
+
         /* Fetch results of calculations from GPU memory. */
         err = clEnqueueReadBuffer(queue, bufC, CL_TRUE, 0,
                                   N * N * sizeof(*result),
@@ -157,7 +184,7 @@ main(void)
 
         /* At this point you will get the result of SSYRK placed in 'result' array. */
         puts("");
-        printResult("clblasSsyrkEx result");
+        // printResult("clblasSsyrkEx result");
     }
 
     /* Release OpenCL events. */

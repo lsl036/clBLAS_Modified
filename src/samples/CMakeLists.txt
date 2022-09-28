@@ -18,6 +18,7 @@ set(SGEMV_SAMPLE_SRC example_sgemv.c)
 set(SSYMV_SAMPLE_SRC example_ssymv.c)
 set(SGEMM_SAMPLE_SRC example_sgemm.c)
 set(STRMM_SAMPLE_SRC example_strmm.c)
+set(STRMM_SAMPLE_SRC example_ctrmm.c)
 set(STRSM_SAMPLE_SRC example_strsm.c)
 set(STRSM_SAMPLE_SRCPP example_strsm.cpp)
 set(CTRSM_SAMPLE_SRC example_ctrsm.c)
@@ -88,6 +89,11 @@ set_property( TARGET example_sgemm PROPERTY FOLDER "Samples")
 add_executable(example_strmm ${STRMM_SAMPLE_SRC})
 target_link_libraries(example_strmm ${OPENCL_LIBRARIES} clBLAS)
 set_property( TARGET example_strmm PROPERTY FOLDER "Samples")
+
+
+add_executable(example_ctrmm ${STRMM_SAMPLE_SRC})
+target_link_libraries(example_ctrmm ${OPENCL_LIBRARIES} clBLAS)
+set_property( TARGET example_ctrmm PROPERTY FOLDER "Samples")
 
 add_executable(example_strsm ${STRSM_SAMPLE_SRC})
 target_link_libraries(example_strsm ${OPENCL_LIBRARIES} clBLAS)
@@ -277,7 +283,7 @@ else( )
     set( CLBLAS_EXAMPLE_INSTALL_DESTINATION share/clBLAS/samples)
 endif()
 install( TARGETS example_sgemm example_sgemv example_ssymv example_ssyrk
-         example_ssyr2k example_strmm example_strsm example_ctrsm
+         example_ssyr2k example_strmm example_ctrmm example_strsm example_ctrsm
          example_strmv example_strsv example_sger example_cher example_ssyr
          example_ssyr2 example_cherk example_ssymm example_chemm
          example_stpmv example_chpmv example_stpsv example_sspmv example_sspr example_chpr
@@ -308,6 +314,7 @@ install(FILES
             example_ssymv.c
             example_sgemm.c
             example_strmm.c
+            example_ctrmm.c
             example_strsm.c
             example_ssyrk.c
             example_ssyr2k.c

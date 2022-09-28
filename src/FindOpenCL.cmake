@@ -55,11 +55,13 @@ endif( )
 find_path(OPENCL_INCLUDE_DIRS
   NAMES OpenCL/cl.h CL/cl.h
   HINTS
+    /usr/include/mwv207
     ${OPENCL_ROOT}/include
     $ENV{OPENCL_ROOT}/include
     $ENV{AMDAPPSDKROOT}/include
     $ENV{CUDA_PATH}/include
   PATHS
+    /usr/include/mwv207
     /usr/include
     /usr/local/include
     /usr/local/cuda/include
@@ -125,6 +127,7 @@ if( LIB64 )
     DOC "OpenCL dynamic library path"
     PATH_SUFFIXES x86_64 x64 x86_64/sdk
     PATHS
+    /usr/lib/x86_64-linux-gnu/mwv207
     /usr/lib
     /usr/local/cuda/lib
   )

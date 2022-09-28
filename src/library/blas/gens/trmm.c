@@ -496,9 +496,16 @@ genLoopsK(
     int ret;
     bool isRel = false;
     const char *inTypeNameA, *inPtrNameA, *inTypeNameB, *inPtrNameB;
-
+    // 测试，强制ctrmm 为f2v
+    // gset->kextra->dtype = TYPE_COMPLEX_FLOAT;
     getVectorTypeName(gset->kextra->dtype, gset->kextra->vecLenA, &inTypeNameA, &inPtrNameA);
     getVectorTypeName(gset->kextra->dtype, gset->kextra->vecLenB, &inTypeNameB, &inPtrNameB);
+
+    // 测试，强制ctrmm 为f2v
+    // inTypeNameA = "float2";
+    // inPtrNameA  = "f2v";
+    // inTypeNameB = "float2";
+    // inPtrNameB  = "f2v";
 
     sprintf(tmp, "uint k0;\n");
     kgenAddStmt(ctx, tmp);
